@@ -42,27 +42,45 @@ public class Itunes {
 
     }
 
-    private long getCodigo(long offset) {
-        if(offset == 0){
-            
-        } else if(offset ==4){
-            
+    private int getCodigo(long offset) throws IOException {
+        codigos.seek(0);
+        int codigoC = codigos.readInt();
+        int codigoD = codigos.readInt();
+        if (offset == 0) {
+            codigos.seek(offset);
+            codigos.writeInt(codigoC + 1);
+            return codigoC;
         }
-    }
-
-    public void addSong(String nombre, String cantante, double precio) {
-
-    }
-
-    public void downloadSong(int codeSong, String cliente) {
+        codigos.seek(offset);
+        codigos.writeInt(codigoD + 1);
+        return codigoD;
 
     }
 
-    public String songs(String txtFile) {
+    public void addSong(String nombre, String cantante, double precio) throws IOException {
+        canciones.seek(0);
+        canciones.writeInt(getCodigo(0));
+        canciones.writeUTF(nombre);
+        canciones.writeUTF(cantante);
+        canciones.writeDouble(precio);
+        canciones.writeDouble(0);
+        canciones.writeInt(0);
+    }
+
+    public void reviewSong(int code, int stars)throws IOException{
+        
+    }
+    
+    
+    public void downloadSong(int codeSong, String cliente) throws IOException{
 
     }
 
-    public void infoSong(int codeSong) {
+    public String songs(String txtFile) throws IOException{
+
+    }
+
+    public void infoSong(int codeSong) throws IOException{
 
     }
 
