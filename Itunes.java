@@ -7,6 +7,7 @@ package Prueba;
 
 import java.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -67,21 +68,85 @@ public class Itunes {
         canciones.writeInt(0);
     }
 
-    public void reviewSong(int code, int stars)throws IOException{
-        
+    public void reviewSong(int code, int stars) throws IOException {
+        try {
+            canciones.seek(0);
+            canciones.readInt();
+            canciones.readUTF();
+            canciones.readUTF();
+            canciones.readDouble();
+            int sumaE = canciones.readInt();
+            int review = canciones.readInt();
+            while (canciones.getFilePointer() < canciones.length()) {
+                int codigo = canciones.readInt();
+                long posicion = canciones.getFilePointer();
+                if (codigo == code) {
+                    canciones.seek(posicion);
+                    canciones.readInt();
+                    canciones.readUTF();
+                    canciones.readUTF();
+                    canciones.readDouble();
+                    canciones.writeDouble(sumaE + stars / review);
+                    canciones.writeInt(review + 1);
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            if (stars > 5 && stars > 0) {
+                JOptionPane.showMessageDialog(null, "El numero de estrellas ingresadas es menor de 0 o mayor de 5");
+            }
+        }
     }
-    
-    
-    public void downloadSong(int codeSong, String cliente) throws IOException{
+
+    public void downloadSong(int codeSong, String cliente) throws IOException {
+        canciones.seek(0);
+        while (canciones.getFilePointer() < canciones.length()) {
+            int codigo = canciones.readInt();
+            long posicion = canciones.getFilePointer();
+            if (codigo == codeSong) {
+                canciones.seek(posicion);
+                canciones.readInt();
+                String titulo = canciones.readUTF();
+                canciones.readUTF();
+                double precio = canciones.readDouble();
+                canciones.readDouble();
+                canciones.readInt();
+                descargas.seek(0);
+                descargas.writeInt(getCodigo(4));
+                descargas.writeUTF(Calendar.getInstance().toString());
+                descargas.writeInt(codeSong);
+                descargas.writeUTF(cliente);
+                descargas.writeDouble(precio);
+                System.out.println("GRACIAS: " + cliente + " por bajar: " + titulo + " a un costo de Lps. " + precio);
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, "No existe la cancion");
+    }
+
+    public void songs(String txtFile) throws IOException {
+        FileWriter fw = new FileWriter(txtFile, true);
+        do {
+            String txt = Main.scanner.next();
+            if (!txt.equals(":p")) {
+                fw.write(txt + "\n");
+                fw.close();
+            } else {
+                break;
+            }
+
+        } while (true);
 
     }
 
-    public String songs(String txtFile) throws IOException{
+    public void infoSong(int codeSong) throws IOException {
+        canciones.seek(0);
+
+        while (canciones.getFilePointer() < canciones.length()) {
+            int codigo = canciones.readInt();
+            long posicion = canciones.getFilePointer();
+            if (codigo == codeSong) {
+
+            }
+        }
 
     }
-
-    public void infoSong(int codeSong) throws IOException{
-
-    }
-
-}

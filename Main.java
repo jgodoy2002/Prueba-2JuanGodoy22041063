@@ -11,11 +11,12 @@ import java.io.*;
  * @author jcgof
  */
 public class Main {
+    static Scanner scanner = new Scanner(System.in);
     public static void main(String args[])
     {
         Itunes itunes = new Itunes();
         int opcion = 0;
-        Scanner scanner = new Scanner(System.in);
+        
         System.out.println("1. añadir Cancion");
         System.out.println("2. reseñas Cancion");
         System.out.println("3. desacargar Cancion");
